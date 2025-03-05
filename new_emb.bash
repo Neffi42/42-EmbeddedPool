@@ -53,5 +53,6 @@ cat << EOF > "$TARGET_DIR/src/emb.h"
 #define UART_BAUDRATE 115200
 #endif
 
-#define UBRRN F_CPU / UART_BAUDRATE - 1
+// UART Baud Rate Register in Asynchronous Double Speed | p.182
+#define UBRRADS ((F_CPU / (8 * UART_BAUDRATE)) - 1)
 EOF
