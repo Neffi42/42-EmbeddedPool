@@ -15,12 +15,12 @@ mkdir -pv "$TARGET_DIR/src"
 touch "$TARGET_DIR/src/$PROGRAM_NAME.c"
 
 cat << EOF > "$TARGET_DIR/Makefile"
-NAME		:= $PROGRAM_NAME
-SRC_DIR		:= ./src
-BUILD_DIR	:= ./build
-F_CPU		:= 16000000
-BOOTRATE	:= 115200
-PORT		:= $PORT
+NAME			:= $PROGRAM_NAME
+SRC_DIR			:= ./src
+BUILD_DIR		:= ./build
+F_CPU			:= 16000000
+UART_BAUDRATE	:= 115200
+PORT			:= $PORT
 
 .PHONY: all bin hex flash
 
@@ -30,14 +30,28 @@ all: flash
 	mkdir -p \$(BUILD_DIR)
 
 bin: \$(BUILD_DIR)
-	avr-gcc -mmcu=atmega328p -Wall -Werror -Os -D F_CPU=\$(F_CPU) -o \$(BUILD_DIR)/\$(NAME).bin \$(SRC_DIR)/\$(NAME).c
+	avr-gcc -mmcu=atmega328p -Wall -Werror -Os -D F_CPU=\$(F_CPU) -D UART_BAUDRATE=\$(UART_BAUDRATE) -o \$(BUILD_DIR)/\$(NAME).bin \$(SRC_DIR)/\$(NAME).c
 
 hex: bin
 	avr-objcopy -j .text -j .data -O ihex \$(BUILD_DIR)/\$(NAME).bin \$(BUILD_DIR)/\$(NAME).hex
 
 flash: hex
-	avrdude -c arduino -p m328p -P \$(PORT) -b \$(BOOTRATE) -U flash:w:\$(BUILD_DIR)/\$(NAME).hex
+	avrdude -c arduino -p m328p -P \$(PORT) -b \$(UART_BAUDRATE) -U flash:w:\$(BUILD_DIR)/\$(NAME).hex
 
 clean:
 	rm -rf \$(BUILD_DIR)
+EOF
+
+cat << EOF > "$TARGET_DIR/src/emb.h"
+#pragma once
+
+#ifndef F_CPU
+#define F_CPU 16000000
+#endif
+
+#ifndef UART_BAUDRATE
+#define UART_BAUDRATE 115200
+#endif
+
+#define UBRRN F_CPU / UART_BAUDRATE - 1
 EOF
