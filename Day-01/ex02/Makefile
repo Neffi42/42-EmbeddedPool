@@ -2,7 +2,7 @@ NAME		:= main
 SRC_DIR		:= ./src
 BUILD_DIR	:= ./build
 F_CPU		:= 16000000
-BOOTRATE	:= 115200
+UART_BAUDRATE	:= 115200
 PORT		:= /dev/ttyUSB0
 
 .PHONY: all bin hex flash
@@ -19,7 +19,7 @@ hex: bin
 	avr-objcopy -j .text -j .data -O ihex $(BUILD_DIR)/$(NAME).bin $(BUILD_DIR)/$(NAME).hex
 
 flash: hex
-	avrdude -c arduino -p m328p -P $(PORT) -b $(BOOTRATE) -U flash:w:$(BUILD_DIR)/$(NAME).hex
+	avrdude -c arduino -p m328p -P $(PORT) -b $(UART_BAUDRATE) -U flash:w:$(BUILD_DIR)/$(NAME).hex
 
 clean:
 	rm -rf $(BUILD_DIR)
