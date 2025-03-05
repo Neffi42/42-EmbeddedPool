@@ -22,7 +22,7 @@ F_CPU			:= 16000000
 UART_BAUDRATE	:= 115200
 PORT			:= $PORT
 
-.PHONY: all bin hex flash
+.PHONY: all bin hex flash screen
 
 all: flash
 
@@ -40,6 +40,9 @@ flash: hex
 
 clean:
 	rm -rf \$(BUILD_DIR)
+
+screen:
+	screen \$(PORT) \$(UART_BAUDRATE)
 EOF
 
 cat << EOF > "$TARGET_DIR/src/emb.h"
