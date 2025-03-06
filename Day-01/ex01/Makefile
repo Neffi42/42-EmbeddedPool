@@ -1,9 +1,8 @@
+include ../../config.mk
+
 NAME		:= main
 SRC_DIR		:= ./src
 BUILD_DIR	:= ./build
-F_CPU		:= 16000000
-UART_BAUDRATE	:= 115200
-PORT		:= /dev/ttyUSB0
 
 .PHONY: all bin hex flash
 

@@ -2,25 +2,23 @@
 
 set -e
 
-if [ "$#" -lt 1 ] || [ "$#" -gt 3 ]; then
-	echo "Usage: $0 <target directory> [program name] [port]"
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+	echo "Usage: $0 <target directory> [program name]"
 	exit 1
 fi
 
 TARGET_DIR=$1
 PROGRAM_NAME=${2:-main}
-PORT=${3:-/dev/ttyUSB0}
 
 mkdir -pv "$TARGET_DIR/src"
 touch "$TARGET_DIR/src/$PROGRAM_NAME.c"
 
 cat << EOF > "$TARGET_DIR/Makefile"
-NAME			:= $PROGRAM_NAME
-SRC_DIR			:= ./src
-BUILD_DIR		:= ./build
-F_CPU			:= 16000000
-UART_BAUDRATE	:= 115200
-PORT			:= $PORT
+include ../../config.mk
+
+NAME		:= $PROGRAM_NAME
+SRC_DIR		:= ./src
+BUILD_DIR	:= ./build
 
 .PHONY: all bin hex flash screen
 
