@@ -38,5 +38,6 @@ char uart_rx() {
 
 int main() {
 	uart_init();
-	uart_tx(uart_rx());
+	for (;;)
+		uart_tx(uart_rx());
 }
